@@ -50,7 +50,7 @@ class Odometer{
             // Initialize the position and orientation
             x = 0.0;
             y = 0.0;
-            theta = 0.0;
+            theta = M_PI/2.0; // Start facing north
 
             // Initialize the time
             last_time = ros::Time::now();
@@ -145,6 +145,12 @@ class Odometer{
             speed = msg->point.y; // Speed in km/h
             speed_m_s = speed/3.6; // Convert speed from km/h to m/s
             steer_angle = msg->point.x; // Steering wheel angle in degrees
+
+            //Smoothing Filter
+            if (abs(steer_angle)<9.0){
+                steer_angle = 0;
+            }
+            
             wheel_angle = steer_angle*(M_PI/180.0)/ STEERING_FACTOR; 
         
             // Print the received data

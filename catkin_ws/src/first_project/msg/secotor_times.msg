@@ -1,3 +1,3 @@
-int: current_sector
-float: current_sector_time
-float: current_sector_mean_speed
+int32 current_sector
+float32 current_sector_time
+float32 current_sector_mean_speed

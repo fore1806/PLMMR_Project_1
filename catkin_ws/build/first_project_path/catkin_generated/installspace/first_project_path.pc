@@ -1,8 +1,0 @@
-prefix=/home/robotics/catkin_ws/install
-
-Name: first_project_path
-Description: Description of first_project_path
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

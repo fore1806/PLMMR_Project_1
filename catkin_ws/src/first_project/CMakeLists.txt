@@ -7,7 +7,7 @@ project(first_project)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS  geometry_msgs  nav_msgs  roscpp  sensor_msgs std_msgs tf)
+find_package(catkin REQUIRED COMPONENTS  geometry_msgs  nav_msgs  roscpp  sensor_msgs std_msgs tf message_generation)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -36,18 +36,17 @@ find_package(catkin REQUIRED COMPONENTS  geometry_msgs  nav_msgs  roscpp  sensor
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
+
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  secotor_times.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -64,10 +63,12 @@ find_package(catkin REQUIRED COMPONENTS  geometry_msgs  nav_msgs  roscpp  sensor
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   nav_msgs#   sensor_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+ std_msgs #geometry_msgs, nav_msgs#   sensor_msgs#   std_msgs
+)
+
+catkin_package(CATKIN_DEPENDS message_runtime)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -122,6 +123,12 @@ target_link_libraries(odometer ${catkin_LIBRARIES})
 
 add_executable(gps_odometer src/gps_odometer.cpp)
 target_link_libraries(gps_odometer ${catkin_LIBRARIES})
+
+add_executable(sector_times src/sector_times.cpp)
+add_dependencies(sector_times ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(sector_times ${catkin_LIBRARIES})
+
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure

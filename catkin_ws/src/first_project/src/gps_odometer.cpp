@@ -60,6 +60,8 @@ class GPSOdometer {
         double y_prev; // Previous y position
         double theta_prev; // Previous orientation
         double delta_time; // Delta time [s]
+        double v_x;
+        double v_y;
         
         // Subscriber variables
         double lat; // Latitude in degrees
@@ -127,10 +129,15 @@ class GPSOdometer {
             z = (X-X_r)*cos(phi_r)*cos(lambda_r) + (Y-Y_r)*cos(phi_r)*sin(lambda_r) + (Z-Z_r)*sin(phi_r); // Calculate the z position
             theta = atan2(y - y_prev, x - x_prev); // Calculate the orientation
 
-            // Update the reference ECEF coordinates
-            // X_r = X; // Update the reference ECEF x coordinate
-            // Y_r = Y; // Update the reference ECEF y coordinate
-            // Z_r = Z; // Update the reference ECEF z coordinate
+            // Smoothing filter
+            if(abs(x-x_prev)>100 || abs(y-y_prev)>100){
+                x = x_prev + v_x*delta_time;
+                y = y_prev + v_y*delta_time;
+                theta = theta_prev;
+            } else{
+                v_x = (x-x_prev)/delta_time;
+                v_y = (y-y_prev)/delta_time;
+            }
         }
 
         void publishPose() {
@@ -163,11 +170,6 @@ class GPSOdometer {
             gps_odom.pose.pose.orientation.w = q.w(); // Set the orientation w
             gps_odom.pose.pose.orientation.z = q.z(); // Set the orientation z
 
-
-            // Calculate the delta time
-            current_time = ros::Time::now(); // Get the current time
-            delta_time = (current_time - last_time).toSec(); // Calculate the delta time
-            last_time = current_time; // Update the last time
 
             // Set the velocita in the odometry message
             gps_odom.twist.twist.linear.x = std::sqrt(std::pow(x-x_prev,2) + std::pow(y-y_prev,2))/delta_time; // Set the linear velocity in x direction
@@ -208,6 +210,11 @@ class GPSOdometer {
             lat = msg->latitude; // Latitude in degrees
             lon = msg->longitude; // Longitude in degrees
             alt = msg->altitude; // Altitude in meters
+
+            // Calculate the delta time
+            current_time = ros::Time::now(); // Get the current time
+            delta_time = (current_time - last_time).toSec(); // Calculate the delta time
+            last_time = current_time; // Update the last time
         
             // Print the received data
             ROS_INFO("Latitude: %f, Longitude: %f, Altitude: %f", lat, lon, alt);

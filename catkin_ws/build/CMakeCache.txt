@@ -412,12 +412,6 @@ first_project_BINARY_DIR:STATIC=/home/robotics/catkin_ws/build/first_project
 //Value Computed by CMake
 first_project_SOURCE_DIR:STATIC=/home/robotics/catkin_ws/src/first_project
 
-//Value Computed by CMake
-first_project_path_BINARY_DIR:STATIC=/home/robotics/catkin_ws/build/first_project_path
-
-//Value Computed by CMake
-first_project_path_SOURCE_DIR:STATIC=/home/robotics/catkin_ws/src/first_project_path
-
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/noetic/share/gencpp/cmake
 
