@@ -24,10 +24,17 @@ class Odometer{
         ros::Time current_time, last_time;
         
         // Constants
-        const double d = 176.5/100.0; // Distance between rear and front wheel [m]
-        const double L = 130.0/100.0; // Rear wheel baseline [m]
-        const double b = L/2.0; // Half of the rear wheel baseline [m]
-        const double STEERING_FACTOR = 32; // Steering factor
+
+        double d; // Distance between rear and front wheel [m]
+        double L; // Rear wheel baseline [m]
+        double b; // Half of the rear wheel baseline [m]
+        double STEERING_FACTOR; // Steering factor
+
+
+        // const double d = 176.5/100.0; // Distance between rear and front wheel [m]
+        // const double L = 130.0/100.0; // Rear wheel baseline [m]
+        // const double b = L/2.0; // Half of the rear wheel baseline [m]
+        // const double STEERING_FACTOR = 32; // Steering factor
         
         double x; // x position
         double y; // y position
@@ -51,6 +58,26 @@ class Odometer{
             x = 0.0;
             y = 0.0;
             theta = M_PI/2.0; // Start facing north
+
+            // Set the vehicles parameters
+            if(n.getParam("d", d)){
+                ROS_INFO("Distance between rear and front wheel: %f", d);
+            } else{
+                ROS_WARN("Distance between rear and front wheel not set, using default value: %f", d);
+            }
+
+            if(n.getParam("L", L)){
+                ROS_INFO("Rear wheel baseline: %f", L);
+            } else{
+                ROS_WARN("Rear wheel baseline not set, using default value: %f", L);
+            }
+
+            if(n.getParam("STEERING_FACTOR", STEERING_FACTOR)){
+                ROS_INFO("Steering factor: %f", STEERING_FACTOR);
+            } else{
+                ROS_WARN("Steering factor not set, using default value: %f", STEERING_FACTOR);
+            }
+            b = L/2.0; // Half of the rear wheel baseline [m]
 
             // Initialize the time
             last_time = ros::Time::now();
@@ -94,7 +121,6 @@ class Odometer{
             odom_br.sendTransform(tf::StampedTransform(transform, current_time, "world", "odom-vehicle"));
 
             // Create a new Odometry message
-            //next, we'll publish the odometry message over ROS
             nav_msgs::Odometry odom;
 
             // Set the header information
@@ -117,6 +143,23 @@ class Odometer{
             odom.twist.twist.linear.x = speed_m_s; // Set the linear velocity in x direction
             odom.twist.twist.linear.y = 0.0; // Set the linear velocity in y direction
             odom.twist.twist.angular.z = omega; // Set the angular velocity
+
+            // Set the covariance pose matrix
+            for (int i = 0; i < 36; ++i) {
+                odom.pose.covariance[i] = 0.0;
+            }
+
+            odom.pose.covariance[0] = 0.1;  // x
+            odom.pose.covariance[7] = 0.1;  // y
+            odom.pose.covariance[35] = 0.2;  // yaw
+
+            // Set the covariance twist matrix
+            for (int i = 0; i < 36; ++i) {
+                odom.twist.covariance[i] = 0.0;
+            }
+            odom.twist.covariance[0] = 0.1;  // vx
+            odom.twist.covariance[7] = 0.1;  // vy
+            odom.twist.covariance[35] = 0.2;  // yaw rate
 
             // Publish the odometry message
             odom_pub.publish(odom); // Publish the odometry message

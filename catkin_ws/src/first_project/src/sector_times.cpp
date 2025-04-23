@@ -28,6 +28,9 @@ class Sector_Times {
         // Timer Values
         ros::Time current_time, last_time;
 
+        // Delta_time
+        double delta_time = 0.0;
+
         // Sectors Position
         const double SECTOR_1_LAT = 45.63011; // LAtitude Sector 1
         const double SECTOR_1_LON = 9.28949; // Longitude Sector 1
@@ -46,6 +49,13 @@ class Sector_Times {
 
         // Current Sector number
         int current_sector_number; // Current sector number
+
+        // GPS first values
+        double lat0; // Latitude
+        double lon0; // Longitude
+        double alt0; // Altitude
+
+        bool isFirst = true;
         
     public:
 
@@ -69,6 +79,25 @@ class Sector_Times {
             sector_3.total_speed_sum = 0.0;
             sector_3.n = 0;
 
+            // Get the reference GPS coordinates from the parameter server
+            if(n.getParam("/lat_r", lat0)){
+                ROS_INFO("Reference latitude: %.15f", lat0);
+            } else {
+                ROS_WARN("Failed to get param 'lat_r'");
+            }
+        
+            if(n.getParam("/lon_r", lon0)){
+                ROS_INFO("Reference longitude: %.15f", lon0);
+            } else {
+                ROS_WARN("Failed to get param 'lon_r'");
+            }
+        
+            if(n.getParam("/alt_r", alt0)){
+                ROS_INFO("Reference altitude: %.15f", alt0);
+            } else {
+                ROS_WARN("Failed to get param 'alt_r'");
+            }
+
             // Initialize the current sector
             actual_sector = sector_1; // Start in sector 1
             current_sector_number = 1; // Start in sector 1
@@ -84,7 +113,7 @@ class Sector_Times {
             speed_sub = n.subscribe("/speedsteer", 1000, &Sector_Times::speedCallback, this);
             
             // Initialize the ROS Publisher
-            sector_times_pub = n.advertise<first_project::secotor_times>("/secotor_times", 1000);
+            sector_times_pub = n.advertise<first_project::secotor_times>("/sector_times", 1000);
         }
 
         //Sector currentSector(double gps_lat, double gps_lon) {
@@ -138,10 +167,21 @@ class Sector_Times {
             // Process the GPS data
             double lat = msg->latitude; // Latitude in degrees
             double lon = msg->longitude; // Longitude in degrees
+            double alt = msg->altitude; // Altitude in meters
+
+            // Reset the time when the first value is received
+            if (isFirst) {
+                last_time = ros::Time::now(); // Reset the last time
+                delta_time = 0.0;
+                ROS_INFO("lat: %.15f", lat);
+                ROS_INFO("lon: %.15f", lon);
+                ROS_INFO("alt: %.15f", alt);
+                isFirst = false;
+            }
 
             // Calculate the delta time
             current_time = ros::Time::now(); // Get the current time
-            double delta_time = (current_time - last_time).toSec(); // Calculate the delta time
+            delta_time = (current_time - last_time).toSec(); // Calculate the delta time
             last_time = current_time; // Update the last time
 
             // We find in which sector the vehicle is
@@ -221,7 +261,7 @@ class Sector_Times {
                     break;
             }
             // What are we going to publish?
-            ROS_INFO("Sector: %d, Time: %f, Mean Speed: %f", sector_times_msg.current_sector, sector_times_msg.current_sector_time, sector_times_msg.current_sector_mean_speed);
+            //ROS_INFO("Sector: %d, Time: %f, Mean Speed: %f", sector_times_msg.current_sector, sector_times_msg.current_sector_time, sector_times_msg.current_sector_mean_speed);
 
             // Publish the sector times message
             sector_times_pub.publish(sector_times_msg);

@@ -1,8 +1,23 @@
 <launch>
+  <!-- Global Parameters -->
+  <!-- Vehicle parameters -->
+  <param name="d" value="1.76" type="double"/> <!-- Distance between rear and front wheel [m] -->
+  <param name="L" value="1.30" type="double"/> <!-- Rear wheel baseline [m] -->
+  <param name="STEERING_FACTOR" value="32.0" type="double"/> <!-- Steering factor -->
+
+  <!-- Reference Frame data-->
+  <!-- Parámetros globales para latitud, longitud y altitud de referencia -->
+  <param name="lat_r"  value="45.618932371709299" type="double" />
+  <param name="lon_r" value="9.281178871861028"  type="double" />
+  <param name="alt_r"  value="229.048960640254904" type="double" />
+
+  
+  <!-- Nodes initialization -->
   <node name="odometer" pkg="first_project" type="odometer"/>
   <node name="gps_odometer" pkg="first_project" type="gps_odometer"/>
   <node name="sector_times" pkg="first_project" type="sector_times"/>
 
+  <!-- Nodes Visualization in rviz -->
   <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find first_project)/rviz/odom_config_with_path.rviz" /> -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find first_project)/rviz/odom_config.rviz" />
 

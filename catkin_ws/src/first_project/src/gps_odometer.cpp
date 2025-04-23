@@ -68,10 +68,13 @@ class GPSOdometer {
         double lon; // Longitude in degrees
         double alt; // Altitude in meters
 
-        // Reference Data
-        const double lat_r = 45.618932386592405; // Reference latitude in grades
-        const double lon_r = 9.281178887031235; // Reference longitude in grades
-        const double alt_r = 229.04906147731415; // Reference altitude in meters
+        double lat_r; // Reference latitude in degrees
+        double lon_r; // Reference longitude in degrees
+        double alt_r; // Reference altitude in meters
+
+        // const double lat_r = 45.618932386592405; // Reference latitude in grades
+        // const double lon_r = 9.281178887031235; // Reference longitude in grades
+        // const double alt_r = 229.04906147731415; // Reference altitude in meters
 
         ECEF reference_ECEF; // Reference ECEF coordinates
         double X_r;// = reference_ECEF.x_ECEF; // Reference ECEF x coordinate
@@ -92,6 +95,25 @@ class GPSOdometer {
 
             theta = 0.0;
             theta_prev = 0.0;
+
+            // Reference Data
+            if(n.getParam("/lat_r", lat_r)){
+                ROS_INFO("Reference latitude: %f", lat_r);
+            } else {
+                ROS_WARN("Failed to get param 'lat_r'");
+            }
+        
+            if(n.getParam("/lon_r", lon_r)){
+                ROS_INFO("Reference longitude: %f", lon_r);
+            } else {
+                ROS_WARN("Failed to get param 'lon_r'");
+            }
+        
+            if(n.getParam("/alt_r", alt_r)){
+                ROS_INFO("Reference altitude: %f", alt_r);
+            } else {
+                ROS_WARN("Failed to get param 'alt_r'");
+            }
 
             reference_ECEF = transform_ECEF(lat_r, lon_r, alt_r); // Reference ECEF coordinates
             X_r = reference_ECEF.x_ECEF; // Reference ECEF x coordinate
