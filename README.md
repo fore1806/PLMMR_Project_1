@@ -84,7 +84,7 @@ source devel/setup.bash
 
 The ROS network structure, visualized through `rqt_graph`, reveals the flow of data and the interaction between nodes and topics.
 
-![ROS Network](images/ROSNetwork.png)
+![ROS Network](catkin_ws/src/first_project/images/ROSNetwork.png)
 
 ### Data Node:
 - `/play_1745433034833092095`: This node is playing back data from the project rosbag file, this file contains three topics where the developed nodes get subscribed.
@@ -103,7 +103,7 @@ The ROS network structure, visualized through `rqt_graph`, reveals the flow of d
 
 The TF tree, obtained using `rqt_tf_tree`, describes the transformation hierarchy between coordinate frames, it represents the two independent localization odometry poses used during this project, employing GPS, and the Ackerman Model.
 
-![rqTree](images/TF_flow.png)
+![rqTree](catkin_ws/src/first_project/images/TF_flow.png)
 
 As seen in the figure,
 
@@ -123,10 +123,9 @@ The following figure shows the results obtained, as expected in red the odometry
 
 | **Odometry without compensation**                   | **Filter Compensation**                 |
 |-----------------------------------------------------|-----------------------------------------|
-| ![](images/senza.png)                               | ![](images/9_degrees.png)               |
-| **Covariance Compensation**                         | **Sensor Data Plot**                    |
-| ![](images/covariance.png)                          | ![](images/Covariance-9Degrees.png)     |
-
+| <img src="catkin_ws/src/first_project/images/senza.png" width="300"/>           | <img src="catkin_ws/src/first_project/images/9_degrees.png" width="300"/> |
+| **Covariance Compensation**                         | **Covariance and Filter Compensation**  |
+| <img src="catkin_ws/src/first_project/images/covariance.png" width="300"/>      | <img src="catkin_ws/src/first_project/images/Covariance-9Degrees.png" width="300"/> |
 
 ## 👨‍💻 Authors
 
