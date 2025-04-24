@@ -116,24 +116,6 @@ class Sector_Times {
             sector_times_pub = n.advertise<first_project::secotor_times>("/sector_times", 1000);
         }
 
-        //Sector currentSector(double gps_lat, double gps_lon) {
-        //    // Check if the vehicle is in sector 1
-        //    if (sectorSurpassed(gps_lat, gps_lon, SECTOR_1_LAT, SECTOR_1_LON)) {
-        //        return sector_2;
-        //    }
-        //    // Check if the vehicle is in sector 2
-        //    else if (sectorSurpassed(gps_lat, gps_lon, SECTOR_2_LAT, SECTOR_2_LON)) {
-        //        return sector_3;
-        //    }
-        //    // Check if the vehicle is in sector 3
-        //    else if (sectorSurpassed(gps_lat, gps_lon, SECTOR_3_LAT, SECTOR_3_LON)) {
-        //        return sector_1;
-        //    } else{
-        //        return actual_sector; // The actual sector has not changed
-        //    }
-        //                
-        //}
-
         int currentSector(double gps_lat, double gps_lon) {
             // Check if the vehicle is in sector 1
             if (sectorSurpassed(gps_lat, gps_lon, SECTOR_1_LAT, SECTOR_1_LON)) {
@@ -260,9 +242,7 @@ class Sector_Times {
                 default:
                     break;
             }
-            // What are we going to publish?
-            //ROS_INFO("Sector: %d, Time: %f, Mean Speed: %f", sector_times_msg.current_sector, sector_times_msg.current_sector_time, sector_times_msg.current_sector_mean_speed);
-
+            
             // Publish the sector times message
             sector_times_pub.publish(sector_times_msg);
         }

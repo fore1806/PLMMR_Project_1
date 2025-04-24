@@ -30,12 +30,6 @@ class Odometer{
         double b; // Half of the rear wheel baseline [m]
         double STEERING_FACTOR; // Steering factor
 
-
-        // const double d = 176.5/100.0; // Distance between rear and front wheel [m]
-        // const double L = 130.0/100.0; // Rear wheel baseline [m]
-        // const double b = L/2.0; // Half of the rear wheel baseline [m]
-        // const double STEERING_FACTOR = 32; // Steering factor
-        
         double x; // x position
         double y; // y position
         double theta; // Orientation
@@ -157,6 +151,8 @@ class Odometer{
             for (int i = 0; i < 36; ++i) {
                 odom.twist.covariance[i] = 0.0;
             }
+
+            // Set the covariance values for linear and angular velocities (Reference values available on the web)
             odom.twist.covariance[0] = 0.1;  // vx
             odom.twist.covariance[7] = 0.1;  // vy
             odom.twist.covariance[35] = 0.2;  // yaw rate

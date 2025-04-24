@@ -72,10 +72,6 @@ class GPSOdometer {
         double lon_r; // Reference longitude in degrees
         double alt_r; // Reference altitude in meters
 
-        // const double lat_r = 45.618932386592405; // Reference latitude in grades
-        // const double lon_r = 9.281178887031235; // Reference longitude in grades
-        // const double alt_r = 229.04906147731415; // Reference altitude in meters
-
         ECEF reference_ECEF; // Reference ECEF coordinates
         double X_r;// = reference_ECEF.x_ECEF; // Reference ECEF x coordinate
         double Y_r;// = reference_ECEF.y_ECEF; // Reference ECEF y coordinate
@@ -173,7 +169,6 @@ class GPSOdometer {
             gps_odom_br.sendTransform(tf::StampedTransform(transform, current_time, "world", "odom-gps"));
 
             // Create a new Odometry message
-            //next, we'll publish the odometry message over ROS
             nav_msgs::Odometry gps_odom;
 
             // Set the header information
